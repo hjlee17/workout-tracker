@@ -48,13 +48,18 @@ main {
     flex-wrap: wrap;
     flex-grow: 1;
 }
+.flex-container {
+    display: flex;
+    background-color: var(--primary);
+    border: var(--dark) solid 1px;
+    justify-content: space-evenly;
+}
 
-aside {
-    flex: 0;
-    background-color: var(--tertiary);
-    padding: 80px;
-    text-align: left;
-    color: var(--light)
+.flex-container > div {
+    background-color: var(--primary);
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
 }
 
 nav {
