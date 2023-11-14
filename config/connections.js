@@ -1,5 +1,6 @@
 // set up connection to db
-
+// jawsdb is "an add-on for providing a fully functional MySQL Database server 
+// for use with your Heroku application"
 const Sequelize = require('sequelize');
 require('dotenv').config();
 
