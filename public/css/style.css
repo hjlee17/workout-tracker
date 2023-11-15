@@ -1,0 +1,85 @@
+:root{
+    --primary: #d1dddb;
+    --secondary: #85B8CB;
+    --tertiary: #1d6a96;
+    --quatrinary:#283B42;
+    --light: white;
+    --dark:black;
+}
+
+.login{
+    background-color: var(--tertiary);
+    border: var(--dark) solid 1px;
+    color: var(--light);
+}
+
+.login:hover{
+background-color: var(--quatrinary);
+color: var(--light);
+}
+
+body {
+    font-family: 'Franklin Gothic Medium', sans-serif;
+    margin: 0;
+    display:flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: flex-start;
+    background-color: var(--primary);
+}
+
+a {
+    color: var(--quatrinary);
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
+}
+
+header {
+    padding: 40px;
+    text-align: center;
+    background: var(--secondary);
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+.flex-container {
+    display: flex;
+    background-color: var(--primary);
+    border: var(--dark) solid 1px;
+    justify-content: space-evenly;
+}
+
+.flex-container > div {
+    background-color: var(--primary);
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+}
+
+nav {
+    display: flex;
+    background-color: var(--secondary);
+}
+
+nav a {
+    color: var(--light);
+    padding: 14px 20px;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-no-style {
+    background: none;
+    border: none;
+    padding: 0px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.1s;
+    margin-left: 16px;
+}
