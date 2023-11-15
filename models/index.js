@@ -16,11 +16,11 @@ User.hasMany(Comment, {
 
 
 // post model associations
-Post.belongsTo(User, {
+Tile.belongsTo(User, {
     foreignKey: 'user_id'
 });
 
-Post.hasMany(Comment, {
+Tile.hasMany(Comment, {
     foreignKey: 'tile_id',
     onDelete: 'CASCADE', // when tile is deleted, corresponding comments are deleted
 });
