@@ -1,6 +1,7 @@
 const User = require('./User');
 const Tile = require('./User');
 const Comment = require('./User');
+const TrackerStatus = require('./TrackerStatus');
 
 
 // user model associations
@@ -15,7 +16,8 @@ User.hasMany(Comment, {
 });
 
 
-// post model associations
+
+// tile model associations
 Tile.belongsTo(User, {
     foreignKey: 'user_id'
 });
@@ -23,6 +25,11 @@ Tile.belongsTo(User, {
 Tile.hasMany(Comment, {
     foreignKey: 'tile_id',
     onDelete: 'CASCADE', // when tile is deleted, corresponding comments are deleted
+});
+
+
+Tile.hasOne(TrackerStatus, {
+    foreignKey: 'tile_id'
 });
 
 
@@ -36,4 +43,9 @@ Comment.belongsTo(Tile, {
 });
 
 
-module.exports = { User, Tile, Comment };
+// trackerstatus model associations
+TrackerStatus.belongsTo(Tile, {
+    foreignKey: 'user_id'
+});
+
+module.exports = { User, Tile, Comment, TrackerStatus };

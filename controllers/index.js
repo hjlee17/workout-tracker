@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
-// for test landing page
-const testRoute = require('./testRoute');
-router.use('/', testRoute);
+
+const homeRoutes = require('./home-routes');
+router.use('/', homeRoutes);
 
 module.exports = router;
