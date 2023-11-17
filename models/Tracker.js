@@ -1,35 +1,36 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connections');
 
-class Tile extends Model {}
+class Tracker extends Model {}
   
-Tile.init(
+Tracker.init(
     {
+      // for now, this id is not utilized because each tile has only one tracker.
+      // future development could utilize this id number if tiles hold multiple trackers.
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      title: {
-        type: DataTypes.STRING,
+      tracker_goal: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          len: [2], 
+          isNumeric: true,
         }
       },
-      date_created: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
+      current_tracker_status: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        validate: {
+          isNumeric: true,
+        }
       },
-      description: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      user_id: {
+      tile_id: {
         type: DataTypes.INTEGER,
         references: {
-          model: 'user',
+          model: 'tile',
           key: 'id',
         },
       },
@@ -40,9 +41,9 @@ Tile.init(
       freezeTableName: true,
       // converts camel-cased column names to snake case
       underscored: true,
-      modelName: 'tile',
+      modelName: 'tracker',
     }
   );
   
-  module.exports = Tile;
+module.exports = Tracker;
   

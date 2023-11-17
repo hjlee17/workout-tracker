@@ -13,12 +13,14 @@ class Comment extends Model {}
       },
       date_created: {
         type: DataTypes.DATE,
-        allowNull: false,
         defaultValue: DataTypes.NOW,
       },
       content: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          len: [2], 
+        }
       },
       user_id: {
         type: DataTypes.INTEGER,
