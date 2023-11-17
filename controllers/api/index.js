@@ -1,10 +1,13 @@
 const router = require('express').Router();
-// const userRoutes = require('./userRoutes')
-const tileRoutes = require('./tileRoute')
+const testRoutes = require('./testRoutes') // remove at deployment
+const userRoutes = require('./userRoutes')
+const tileRoutes = require('./tileRoutes')
 
+
+router.use('/tests', testRoutes) // remove at deployment
+
+router.use('/users', userRoutes)
 router.use('/tiles', tileRoutes)
-// user route
-// comment route?
 
 
 module.exports = router;
