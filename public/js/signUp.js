@@ -33,7 +33,6 @@ if (username && password) {
     } catch (error) {
       console.error(`An error occurred: ${error.message}`);
     }
-  }
 }; 
 
 document
