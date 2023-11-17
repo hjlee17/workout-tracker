@@ -19,5 +19,5 @@ const loginFormHandler = async (event) => {
       }
     };
 document //TODO: Awaiting handlbar integration
-.querySelector('.login-form')
+.querySelector('.login-btn')
 .addEventListener('submit', loginFormHandler);

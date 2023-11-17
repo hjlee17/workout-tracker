@@ -1,9 +1,29 @@
 const router = require('express').Router();
 const { User } = require('../models');
 
+// test route for layout development
+router.get('/meg', async (req, res) => {
+  res.render('test-becca');
+});
+
+// test route for layout development
+router.get('/ben', async (req, res) => {
+  res.render('test-ben');
+});
+
+
+
+
+
+
+
+
+
+
+
 router.get('/', async (req, res) => {
     //logged in renders /user of logged in user
-    try {\
+    try {
         // update below based on what we decide to pass into the TODO page
         const userData = await User.findAll({
           attributes: { exclude: ['password'] },
@@ -20,4 +40,5 @@ router.get('/', async (req, res) => {
         res.status(500).json(err);
       }
     });
-    
+
+module.exports = router;
