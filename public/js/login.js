@@ -1,7 +1,7 @@
 const loginFormHandler = async (event) => {
     event.preventDefault();
-    // const email = TODO:email jquery
-    // const password = TODO:password jsquery
+    // const email = $('id or class selector').val().trim();
+    // const password = $('id or class selector').val().trim();
 
     if (email && password) {
         // Send the e-mail and password to the server
@@ -21,4 +21,3 @@ const loginFormHandler = async (event) => {
 document //TODO: Awaiting handlbar integration
 .querySelector('.login-form')
 .addEventListener('submit', loginFormHandler);
-  
