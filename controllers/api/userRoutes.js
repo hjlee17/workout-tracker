@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../../models');
 
-router.post('/api/login', async (req, res) => {
+router.post('/login', async (req, res) => {
   try {
     // Find the user who matches the posted e-mail address
     const userData = await User.findOne({ where: { email: req.body.email } });
@@ -36,7 +36,7 @@ router.post('/api/login', async (req, res) => {
   }
 });
 
-router.post('/api/logout', (req, res) => {
+router.post('/logout', (req, res) => {
   if (req.session.logged_in) {
     // Remove the session variables
     req.session.destroy(() => {
