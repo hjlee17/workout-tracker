@@ -1,9 +1,8 @@
 const router = require('express').Router();
-const { Tile, User, Comment, TrackerStatus } = require('../../models');
+const { Tile, User, Comment, Tracker } = require('../../models');
 // const withAuth = require('../../utils/auth');
 
 // The `/api/tiles` endpoint
-
  
 // GET one tile, with associated user and comment data
 router.get('/:id', async (req, res) => {
