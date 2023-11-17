@@ -8,18 +8,34 @@ const passwordImput = document.querySelector('#password-signup');
 const username = usernameImput.value.trim();
 const password = passwordImput.value.trim();
 
+
 if (username && password) {
     const userData = {
-        username,
-        password,
+      username,
+      password,
     };
+
     try {
-        const response = await fetch ('models/User.js',
+      const response = await fetch("/api/users", {
         method: "POST",
         body: JSON.stringify(userData),
         headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        }
-        )
+      if (response.ok) {
+        document.location.replace("/dashboard");
+      } else {
+        const errorMessage = await response.text();
+        alert(`Signup failed: ${response.statusText}\n${errorMessage}`);
+      }
+    } catch (error) {
+      console.error(`An error occurred: ${error.message}`);
     }
-};
+  }
+}; 
+
+document
+    .querySelector(".signup-form")
+    .addEventListener("submit", signupFormhandler);
