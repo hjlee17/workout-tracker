@@ -15,13 +15,15 @@ router.get('/ben', async (req, res) => {
   res.render('test-ben');
 });
 
-// test route for development
+// test route for development, endpoint: becca
 router.get('/becca', async (req, res) => {
+  // test-becca layout
   res.render('test-becca');
 });
 
-// test route for development
+// test route for development, endpoint: test-becca-login
 router.get('/test-becca-login', async (req, res) => {
+  // test-becca-login layout
   res.render('test-becca-login');
 });
 

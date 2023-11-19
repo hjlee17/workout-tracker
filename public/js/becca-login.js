@@ -24,7 +24,7 @@ const loginHandler = async (event) => {
 
           if (response.ok) {
             // replace with proper endpoint upon logging in
-              document.location.replace('/test');
+              document.location.replace('/becca');
 
           } else {
               const error_message = await response.text();
@@ -37,13 +37,6 @@ const loginHandler = async (event) => {
       }
   }
 };
-
-
-// for testing
-const buttonTest = async (event) => {
-  event.preventDefault();
-  document.location.replace('/test');
-}
 
 
 // event handler for the login button
