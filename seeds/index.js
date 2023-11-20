@@ -1,23 +1,24 @@
 const sequelize = require('../config/connections');
 
-
-const seedUsers = require('./userData');
-const seedTiles = require('./tileData');
-const seedTrackers = require('./trackerData');
 const seedComments = require('./commentData');
+const seedTrackers = require('./trackerData');
+
+var colors = require('colors');
+colors.enable();
 
 
 const seedDatabase = async () => {
+  // force true - tells Sequelize to drop all existing tables in the database 
   await sequelize.sync({ force: true });
 
-  await seedUsers();
-  console.log('\n----- Users Seeded -----\n');
-  await seedTiles();
-  console.log('\n----- Tiles Seeded -----\n');
-  await seedTrackers();
-  console.log('\n----- Trackers Seeded -----\n');
+  // seedComments calls seedTiles which calls seedUsers
   await seedComments();
-  console.log('\n----- Comments Seeded -----\n');
+  console.log('\n----- Comments Seeded, moving onto Trackers... -----\n'.yellow);
+
+  await seedTrackers();
+  console.log('\n----- Trackers Seeded... -----\n'.yellow);
+
+  console.log('\n----- Users, Tiles, Comments, and Trackers have all been seeded. -----\n'.bold.green);
 
   process.exit(0);
 };
