@@ -1,0 +1,16 @@
+<div class="delete-confirm-wrapper">
+    <h2 id="delete-tile-header">Are you sure you want to delete your tile?</h2>
+    
+    {{!-- style date later --}}
+    <p id="view-tile-date">Posted on: {{format_date tile.date_created}}</p>
+    <input type="title" class="field" id="view-tile-title" readonly placeholder="{{tile.title}}" />
+    <textarea class="field" id="delete-tile-content" readonly placeholder="{{tile.description}}"></textarea>
+
+
+    <button id="confirm-delete-btn">Confirm Delete</button>
+
+
+</div>   
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="/js/becca-delete-tile.js"></script>
