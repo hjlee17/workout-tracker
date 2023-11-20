@@ -4,7 +4,7 @@ const path = require('path'); // node module for paths
 // custom imports
 const routes = require('./controllers'); // controllers folder - routes
 // to use if we create custom helpers
-// const helpers = require('./utils/helpers'); 
+const helpers = require('./utils/helpers'); 
 
 
 // express middleware for sessions and for handlebars
@@ -22,7 +22,7 @@ const app = express();
 const PORT = process.env.PORT || 3001; 
 
 // create instance of handlebars (add { helpers } if needed)
-const hbs = exphbs.create();
+const hbs = exphbs.create( { helpers } );
 
 
 const sess = {
