@@ -1,38 +1,37 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connections');
 
-class Comment extends Model {}
+class Tracker extends Model {}
   
-  Comment.init(
+Tracker.init(
     {
       // assigned by database, primary key
+      // for now, this id is not utilized because each tile has only one tracker.
+      // future development could utilize this id number if tiles hold multiple trackers.
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
-      // date comment is posted, assigns the current date by default
-      date_created: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-      },
-      // the text content of the comment
-      // the validator is an arbitrary number so that the comment is not blank, and not only a single letter
-      content: {
-        type: DataTypes.STRING,
+      // the total goal (e.g. 10000 if the goal is 10000 steps)
+      // validator to make sure it's a number
+      tracker_goal: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          len: [2], 
+          isNumeric: true,
         }
       },
-      // references the user it belongs to with the foreign key
-      user_id: {
+      // validator to make sure it's a number
+      // the current total the user is at. they will be able to add to this total.. 
+      // need to define a method here for that functionality
+      current_tracker_status: {
         type: DataTypes.INTEGER,
-        references: {
-          model: 'user',
-          key: 'id',
-        },
+        defaultValue: 0,
+        validate: {
+          isNumeric: true,
+        }
       },
       // references the tile it belongs to with the foreign key
       tile_id: {
@@ -49,9 +48,9 @@ class Comment extends Model {}
       freezeTableName: true,
       // converts camel-cased column names to snake case
       underscored: true,
-      modelName: 'comment',
+      modelName: 'tracker',
     }
   );
   
-  module.exports = Comment;
+module.exports = Tracker;
   

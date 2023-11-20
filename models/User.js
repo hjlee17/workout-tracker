@@ -10,25 +10,42 @@ class User extends Model {
   
   User.init(
     {
+      // assigned by database, primary key
       id: {
         type: DataTypes.INTEGER,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
+      // the user's first name
+      // the validator is an arbitrary number so that the name is not blank, and not only a single letter
       first_name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          len: [2],
+        },
       },
+      // the user's first name
+      // the validator is an arbitrary number so that the name is not blank, and not only a single letter
       last_name: {
         type: DataTypes.STRING,
         allowNull: false,
+        validate: {
+          len: [2],
+        },
       },
+      // the user's date of birth
+      // collect user input (on front end) via a drop down?
       date_of_birth: {
         type: DataTypes.DATE,
         allowNull: false,
-        // 
+        validate: {
+          isDate: true,
+        },
       },
+      // the user's email
+      // must be unique to be added to the database
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -37,6 +54,9 @@ class User extends Model {
           isEmail: true,
         },
       },
+      // the user's password
+      // validator requires password to be at least 5 characters
+      // maybe can add further validation to require password to be alphanumeric with mixed case and special characters
       password: {
         type: DataTypes.STRING,
         allowNull: false,

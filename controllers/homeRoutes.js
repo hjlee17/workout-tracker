@@ -1,23 +1,21 @@
 const router = require('express').Router();
 const { User } = require('../models');
 
+
+// ------------------------------------------------------------------------------------------
+// for testing during development 
+
 // test route for layout development
 router.get('/meg', async (req, res) => {
   res.render('test-becca');
 });
 
-// test route for layout development
+// test route for any script/route development
 router.get('/ben', async (req, res) => {
   res.render('test-ben');
 });
 
-
-
-
-
-
-
-
+// ------------------------------------------------------------------------------------------
 
 
 
