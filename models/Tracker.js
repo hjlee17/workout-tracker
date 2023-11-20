@@ -33,6 +33,16 @@ Tracker.init(
           isNumeric: true,
         }
       },
+      percentage: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          if (this.tracker_goal !== 0) {
+            return (this.current_tracker_status / this.tracker_goal) * 100;
+          } else {
+            return 0; 
+          }
+        }
+      },
       // references the tile it belongs to with the foreign key
       tile_id: {
         type: DataTypes.INTEGER,

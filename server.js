@@ -29,7 +29,7 @@ const sess = {
     // signs the session id cookie - should be encrypted, ideally, but we haven't done this in class yet
     secret: 'benrodriguezmoranmegansargentkylejohsnonbeccalee', 
     cookie: {
-        maxAge: 300000, // max "age" of cookie - 300000 ms (5 min)
+        maxAge: 300000, // max "age" of cookie - 900000 ms (5 min)
         httpOnly: true, // restrict cookie access to HTTP requests
         secure: false, // should set to true when deploying
         sameSite: 'strict', // cookie sharing only for same-site requests

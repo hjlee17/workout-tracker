@@ -1,411 +1,141 @@
 const router = require('express').Router();
-const { User, Tile, Comment, Tracker } = require('../../models');
-const withAuth = require('../../utils/auth');
+const { User } = require('../../models');
+const { Tile } = require('../../models');
+
+// The `/api/users` endpoint
 
 
-// ------------------------------------------------------------------------------------------
-// for testing during development 
+// ------------------------------------------------------------------
+// FOR TESTING IN INSOMNIA
 
-// test route for layout development
-router.get('/meg', async (req, res) => {
-  res.render('test-becca');
+
+// GET all users 
+router.get('/', async (req, res) => {
+  const userData = await User.findAll({
+    include: [{ model: Tile }],
+  });
+  res.status(200).json(userData);
 });
 
-// test route for any script/route development
-router.get('/ben', async (req, res) => {
-  res.render('test-ben');
+// DELETE a user 
+router.delete('/:id', async (req, res) => {
+  const deletedUser = await User.destroy({
+    where: {
+      id: req.params.id,
+    },
+  });
+  res.json(deletedUser);
 });
+// ------------------------------------------------------------------
 
-// test route for development, endpoint: becca
-router.get('/becca', async (req, res) => {
-  // test-becca layout
-  res.render('test-becca');
-});
 
-// test route for development, endpoint: test-becca-login
-router.get('/test-becca-login', async (req, res) => {
-  // test-becca-login layout
-  res.render('test-becca-login-and-signup');
-});
-
-// test route for development, endpoint: test-becca-login
-router.get('/test-becca-dashboard', async (req, res) => {
-  // test-becca-login layout
-  res.render('test-becca-dashboard');
-});
-
-// test route for development
-router.get('/test', async (req, res) => {
-  res.render('test');
-});
-
-// ------------------------------------------------------------------------------------------
-
-// // GET all users to render to homepage
-router.get('/', withAuth, async (req, res) => {
+// create a new user -- DEVELOPED BY BECCA
+router.post('/', async (req, res) => {
   try {
-      const userData = await User.findAll({
-          include: [
-              {
-                model: Tile,
-              },
-          ],
-      });
-      
-      // serialize for handlebars
-      const users = userData.map((user) => user.get({ plain: true }));
-      console.log('users:', users)
+    const newUser = await User.create(req.body);
+    /* req.body should look like this
+      {
+        "first_name": "", 
+        "last_name": "", 
+        "email": "", 
+        "date_of_birth": "", 
+        "password": ""
+      }
+    */
 
-      // render homepage
-      res.render('test-becca-homepage', {
-        users,
-        logged_in: req.session.logged_in
-      });
+    req.session.save(() => {
+      req.session.user_id = newUser.id;
+      req.session.logged_in = true;
 
-  } catch (error) {
-      res.status(500).json(error);
+      res.status(200).json(newUser);
+    });
+  } catch (err) {
+    res.status(400).json(err);
   }
 });
 
 
-// GET all tiles (by logged in user) to populate dashboard -- DEVELOPED BY BECCA
-// NEEDS FURTHER DEVELOPMENT.
-router.get('/dashboard', withAuth, async (req, res) => {
-  console.log('req:', req.session.user_id)
+// // was having issues with login
+// router.post('/login', async (req, res) => {
+//   try {
+//     // Find the user who matches the posted e-mail address
+//     const userData = await User.findOne({ where: { email: req.body.email } });
+
+//     if (!userData) {
+//       res
+//         .status(400)
+//         .json({ message: 'Incorrect email or password, please try again' });
+//       return;
+//     }
+
+//     // Verify the posted password with the password store in the database
+//     const validPassword = await userData.checkPassword(req.body.password);
+
+//     if (!validPassword) {
+//       res
+//         .status(400)
+//         .json({ message: 'Incorrect email or password, please try again' });
+//       return;
+//     }
+
+//     // Create session variables based on the logged in user
+//     req.session.save(() => {
+//       req.session.user_id = userData.id;
+//       req.session.logged_in = true;
+      
+//       res.json({ user: userData, message: 'You are now logged in!' });
+//     });
+
+//   } catch (err) {
+//     res.status(400).json(err);
+//   }
+// });
+
+
+// find existing user to login
+router.post('/login', async (req, res) => {
   try {
-      const [tileData, commentData] = await Promise.all([
-          
-        Tile.findAll({
-            where: {
-              user_id: req.session.user_id
-              },
-            include: [
-              {
-                model: User,
-                attributes: ['first_name'],
-              },
-              {
-                model: Comment,
-              },
-              {
-                model: Tracker,
-                attributes: ['id', 'tracker_goal', 'current_tracker_status', 'percentage'],
-              },
-            ],
-        }),
-      ])
+    const userData = await User.findOne({ where: { email: req.body.email } });
 
-      const loggedInUser = req.session.user_id;
-
-      // add a "user_logged_in" flag to each tile in the array for the tile partial layout
-      // for use with delete/update
-      const tiles = tileData.map(tile => {
-          const oneTile = tile.get({ plain: true });
-          // "req.session.user_id === post.user_id"
-          // i don't need to do this comparison for the homepage because... 
-          // i've only retrieved posts belonging to the user 
-          oneTile.user_logged_in = true;
-          return oneTile;
-      });
-
-      console.log('tiles:', tiles)
-
-      res.render('test-becca-dashboard', {
-        tiles, 
-        // "logged_in" flag passed to use in main
-        logged_in: req.session.logged_in
-      });
-
-  } catch (error) {
-      res.status(500).json(error);
-  }
-});
-
-
-// GET all of a users tiles to view or this redirects to dashboard 
-router.get('/users/:id', withAuth, async (req, res) => {
-  console.log('req:', req.session.user_id)
-  console.log('flag:', req.session.logged_in)
-  console.log('req.params.id:', req.params.id)
-  // store user_id of logged in user
-  const loggedInUser = req.session.user_id;
-  console.log("loggedInUser: ", loggedInUser)
-
-  try { 
-     // retrieve tile data from db
-      const tileData = await Tile.findAll({
-        where: {
-          user_id: req.params.id,
-        },
-        include: [
-          {
-            model: User,
-            attributes: ['first_name', 'last_name'],
-          },
-          {
-            model: Comment,
-            attributes: [ 'id', 'date_created', 'content', 'user_id', 'tile_id' ],
-          },
-          {
-            model: Tracker,
-            attributes: [ 'id', 'tracker_goal', 'current_tracker_status', 'percentage', 'tile_id' ],
-          },
-        ],
-      })
-      
-      // error handling
-      if(!tileData) {
-          res.status(404).json({message: 'No tiles exist!'});
-          return;
-      }
-
-      // serialize tiles and comments for handlebars, while adding user_logged_in flag added to each object 
-      // this flag will be set to true/false and used in handlebars for conditional rendering
-
-      // add the 'user_logged_in' flag to each tile
-      // user_logged_in flag should be added also if the user_id of tile = loggedInUser
-      // could i handle this in the model?
-
-      const tiles = tileData.map(tile => {
-        const oneTile = tile.get({ plain: true });
-        oneTile.user_logged_in = loggedInUser === oneTile.user_id || loggedInUser === tile.user_id;
-        return oneTile;
-      })
-      console.log('tiles:', tiles)
-
-      // redirect to dashboard if user is visiting their own page
-      if (loggedInUser == req.params.id) {
-        res.redirect('/dashboard'); 
-        return;
-      }
-      
-      res.render('test-becca-single-user', { 
-          tiles, // user_logged_in flag attached to post (for use in post partial) 
-          // "logged_in" flag passed to use in main
-          logged_in: req.session.logged_in,
-      });
-
-  } catch (error) {
-        res.status(500).json(error);
-        console.log(error);
-  };     
-});
-
-
-
-// // GET all users to render to homepage
-router.get('/', withAuth, async (req, res) => {
-  try {
-      const userData = await User.findAll({
-          include: [
-              {
-                model: Tile,
-              },
-          ],
-      });
-      
-      // serialize for handlebars
-      const users = userData.map((user) => user.get({ plain: true }));
-      console.log('users:', users)
-
-      // render homepage
-      res.render('test-becca-homepage', {
-        users,
-        logged_in: req.session.logged_in
-      });
-
-  } catch (error) {
-      res.status(500).json(error);
-  }
-});
-
-
-// GET all tiles (by logged in user) to populate dashboard -- DEVELOPED BY BECCA
-// NEEDS FURTHER DEVELOPMENT.
-router.get('/dashboard', withAuth, async (req, res) => {
-  console.log('req:', req.session.user_id)
-  try {
-      const [tileData, commentData] = await Promise.all([
-          
-        Tile.findAll({
-            where: {
-              user_id: req.session.user_id
-              },
-            include: [
-              {
-                model: User,
-                attributes: ['first_name'],
-              },
-              {
-                model: Comment,
-              },
-              {
-                model: Tracker,
-                attributes: ['id', 'tracker_goal', 'current_tracker_status', 'percentage'],
-              },
-            ],
-        }),
-      ])
-
-      const loggedInUser = req.session.user_id;
-
-      // add a "user_logged_in" flag to each tile in the array for the tile partial layout
-      // for use with delete/update
-      const tiles = tileData.map(tile => {
-          const oneTile = tile.get({ plain: true });
-          // "req.session.user_id === post.user_id"
-          // i don't need to do this comparison for the homepage because... 
-          // i've only retrieved posts belonging to the user 
-          oneTile.user_logged_in = true;
-          return oneTile;
-      });
-
-      console.log('tiles:', tiles)
-
-      res.render('test-becca-dashboard', {
-        tiles, 
-        // "logged_in" flag passed to use in main
-        logged_in: req.session.logged_in
-      });
-
-  } catch (error) {
-      res.status(500).json(error);
-  }
-});
-
-
-
-// GET one tile to render to single-posts layout
-router.get('/tiles/:id', withAuth, async (req, res) => {
-  console.log('req:', req.session.user_id)
-  console.log('flag:', req.session.logged_in)
-  console.log('tile_id:', req.params.id)
-
-  try{ 
-      const [tileData, commentData] = await Promise.all([
-          
-          Tile.findByPk(req.params.id, {
-              include: [
-                {
-                    model: User,
-                    attributes: ['first_name'],
-                },
-              ],
-          }),
-
-          Comment.findAll({
-              where: {
-                tile_id: req.params.id,
-              },
-              include: [
-                  {
-                    model: User,
-                    attributes: ['first_name'],
-                  },
-              ],
-              attributes: ['id', 'date_created', 'content', 'user_id', 'tile_id'],
-          }),
-      ])
-      
-      // error handling
-      if(!tileData) {
-          res.status(404).json({message: 'No tile exists with this id!'});
-          return;
-      }
-
-      const loggedInUser = req.session.user_id;
-
-      const tile = tileData.get({ plain: true });
-      // user_logged_in flag added to post array for post partial layout
-      tile.user_logged_in = loggedInUser === tile.user_id;
-      console.log('tile:', tile)
-
-
-      const comments = commentData.map(comment => {
-          const oneComment = comment.get({ plain: true });
-          // add the 'user_logged_in' flag to each comment
-          // user_logged_in flag should be added also if the post_id = logged in user
-          oneComment.user_logged_in = loggedInUser === oneComment.user_id || loggedInUser === tile.user_id;
-          return oneComment;
-      });
-      console.log('comments:', comments)
-      
-  
-      res.render('test-becca-single-tile', { 
-          tile, // user_logged_in flag attached to post (for use in post partial) 
-          comments, // user_logged_in flag attached to comments (for use in comment partial) 
-          // "logged_in" flag passed to use in main
-          logged_in: req.session.logged_in,
-      });
-
-  } catch (error) {
-        res.status(500).json(error);
-        console.log(error);
-  };     
-});
-
-
-// GET one tile to delete
-router.get('/tiles/delete/:id', withAuth, async (req, res) => {
-  console.log('req:', req.session.user_id)
-  console.log('flag:', req.session.logged_in)
-  console.log('req.params.id', req.params.id)
-  try{ 
-      const tileData = await Tile.findByPk(req.params.id, {
-          include: [
-              {
-                model: User,
-                attributes: ['first_name'],
-              },
-          ],
-
-      });
-
-      if(!tileData) {
-          res.status(404).json({message: 'No tile exists with this id!'});
-          return;
-      }
- 
-      const tile = tileData.get({ plain: true });
-
-      // compare the req.session.user_id and the user_id (part of the Tile model)
-      // and then if they DONT match, stop the code and redirect
-      // res.render('test');
-
-      // check logged in user and owner of post
-      if (req.session.user_id !== tile.user_id) {
-          res.redirect('/test'); 
-          return;
-      }
-
-      tile.logged_in = req.session.logged_in;
-      console.log('deletetile:', tile)
-
-      res.render('test-becca-confirm-delete-tile', { 
-          tile, 
-          logged_in: req.session.logged_in
-      });
-
-  } catch (error) {
-        res.status(500).json(error);
-        console.log(error);
-  };     
-});
-
-
-
-
-
-// login route -- DEVELOPED BY BECCA
-router.get('/login', async (req, res) => {
-
-  // if the user is already logged in, redirect the request to another route
-  if (req.session.logged_in) {
-      res.redirect('/test-becca-dashboard');
+    if (!userData) {
+      res
+        .status(400)
+        .json({ message: 'No user with that email address. Sign up or please try again.' });
       return;
-  }
+    }
 
-  res.render('test-becca-login-and-signup'); 
+    const validPassword = await userData.checkPassword(req.body.password);
+
+    if (!validPassword) {
+      res
+        .status(400)
+        .json({ message: 'Incorrect password.' });
+      return;
+    }
+
+    req.session.save(() => {
+      req.session.user_id = userData.id;
+      req.session.logged_in = true;
+      
+      res.json({ user: userData, message: 'You are now logged in!' });
+    });
+
+  } catch (error) {
+    res.status(400).json(error);
+  }
+});
+
+
+
+router.post('/logout', (req, res) => {
+  if (req.session.logged_in) {
+    // Remove the session variables
+    req.session.destroy(() => {
+      res.status(204).end();
+    });
+  } else {
+    res.status(404).end();
+  }
 });
 
 
