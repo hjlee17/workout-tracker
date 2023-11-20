@@ -44,22 +44,10 @@ header {
 }
 
 main {
-    display: flex;
+    display: center;
     flex-wrap: wrap;
     flex-grow: 1;
-}
-.flex-container {
-    display: flex;
-    background-color: var(--primary);
-    border: var(--dark) solid 1px;
-    justify-content: space-evenly;
-}
-
-.flex-container > div {
-    background-color: var(--primary);
-    margin: 10px;
-    padding: 20px;
-    font-size: 30px;
+    background-color: var(--quatrinary);
 }
 
 nav {
@@ -72,6 +60,11 @@ nav a {
     padding: 14px 20px;
     text-decoration: none;
     text-align: center;
+}
+
+nav a :hover{
+    color: var(--quatrinary);
+    background-color: var(--light);
 }
 
 .btn-no-style {
