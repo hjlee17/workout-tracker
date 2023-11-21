@@ -110,7 +110,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
       console.log('tiles:', tiles)
 
-      res.render('test-becca-dashboard', {
+      res.render('dashboard', {
         tiles, 
         // "logged_in" flag passed to use in main
         logged_in: req.session.logged_in
@@ -209,7 +209,7 @@ router.get('/', withAuth, async (req, res) => {
       console.log('users:', users)
 
       // render homepage
-      res.render('test-becca-homepage', {
+      res.render('dashboard', {
         users,
         logged_in: req.session.logged_in
       });
@@ -262,7 +262,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
       console.log('tiles:', tiles)
 
-      res.render('test-becca-dashboard', {
+      res.render('dashboard', {
         tiles, 
         // "logged_in" flag passed to use in main
         logged_in: req.session.logged_in
@@ -401,7 +401,7 @@ router.get('/login', async (req, res) => {
 
   // if the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-      res.redirect('/test-becca-dashboard');
+      res.redirect('/dashboard');
       return;
   }
 
