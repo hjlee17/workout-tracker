@@ -1,106 +1,115 @@
 const router = require('express').Router();
-const { User } = require('../../models');
-const { Tile } = require('../../models');
+const { Tile, User, Comment, Tracker } = require('../../models');
+const withAuth = require('../../utils/auth');
 
-// The `/api/users` endpoint
+// The `/api/tiles` endpoint
 
 
 // ------------------------------------------------------------------
 // FOR TESTING IN INSOMNIA
 
 
-// GET all users 
+// GET all tiles 
 router.get('/', async (req, res) => {
-  const userData = await User.findAll({
-    include: [{ model: Tile }],
+    const tileData = await Tile.findAll({
+      include: [{ model: User }],
+    });
+    res.status(200).json(tileData);
   });
-  res.status(200).json(userData);
+  
+
+
+
+  
+  // DELETE a tile 
+  router.delete('/:id', async (req, res) => {
+    const deletedtile = await Tile.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.json(deletedtile);
+  });
+  
+  
+  // ------------------------------------------------------------------
+ 
+// GET one tile, with associated user and comment data
+router.get('/:id', async (req, res) => {
+    try {
+        const tilesData = await Tile.findByPk(req.params.id, {
+            include: [
+                { model: User }, 
+                { model: Comment }
+            ],
+        });
+            res.status(200).json(tilesData);
+    } catch (err) {
+            console.log(err);
+    res.status(500).json(err);
+    }
 });
 
-// DELETE a user 
-router.delete('/:id', async (req, res) => {
-  const deletedUser = await User.destroy({
-    where: {
-      id: req.params.id,
-    },
-  });
-  res.json(deletedUser);
-});
-// ------------------------------------------------------------------
 
-
-// create a new user -- DEVELOPED BY BECCA
-router.post('/', async (req, res) => {
+// CREATE new tile
+router.post('/create', withAuth, async (req, res) => {
+  
+  /* req.body should look like this...
+    {
+      "title": "",
+      "description": "",
+      "user_id": """
+    }
+  */
   try {
-    const newUser = await User.create(req.body);
-    /* req.body should look like this
+    const newTileData = await {
+      ...req.body,
+      // now grab user id from the session info through withAuth
+      user_id: req.session.user_id,
+    }
+
+    const newTile = await Tile.create(newTileData);
+    res.json(newTile);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+
+
+
+
+// DELETE tile
+router.delete('/delete/:id', withAuth, async (req, res) => {
+  console.log("post delete api test'")
+  console.log(req.params.id)
+
+  /* req.body should look like this...
+  {
+    "post_id": "",
+  }
+  */
+
+  try {
+    const deletedTile = await Tile.destroy(
       {
-        "first_name": "", 
-        "last_name": "", 
-        "email": "", 
-        "date_of_birth": "", 
-        "password": ""
-      }
-    */
+        where: {
+          id: req.body.id
+        }
+      }, 
+    );
 
-    req.session.save(() => {
-      req.session.user_id = newUser.id;
-      req.session.logged_in = true;
-
-      res.status(200).json(newUser);
-    });
-  } catch (err) {
-    res.status(400).json(err);
-  }
-});
-
-
-
-router.post('/login', async (req, res) => {
-  try {
-    // Find the user who matches the posted e-mail address
-    const userData = await User.findOne({ where: { email: req.body.email } });
-
-    if (!userData) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
+    // error handling
+    if(!deletedTile) {
+      res.status(404).json({message: 'No tile exists with this id!'});
       return;
     }
 
-    // Verify the posted password with the password store in the database
-    const validPassword = await userData.checkPassword(req.body.password);
-
-    if (!validPassword) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
-    }
-
-    // Create session variables based on the logged in user
-    req.session.save(() => {
-      req.session.user_id = userData.id;
-      req.session.logged_in = true;
-      
-      res.json({ user: userData, message: 'You are now logged in!' });
-    });
-
-  } catch (err) {
-    res.status(400).json(err);
-  }
-});
-
-
-
-router.post('/logout', (req, res) => {
-  if (req.session.logged_in) {
-    // Remove the session variables
-    req.session.destroy(() => {
-      res.status(204).end();
-    });
-  } else {
-    res.status(404).end();
+    // send updated post as a res
+    res.json(deletedTile);
+    
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
 
