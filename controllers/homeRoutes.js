@@ -29,9 +29,9 @@ router.get('/test-becca-login', async (req, res) => {
 });
 
 // test route for development, endpoint: test-becca-login
-router.get('/test-becca-dashboard', async (req, res) => {
+router.get('/dashboard', async (req, res) => {
   // test-becca-login layout
-  res.render('test-becca-dashboard');
+  res.render('dashboard');
 });
 
 // test route for development
@@ -42,7 +42,7 @@ router.get('/test', async (req, res) => {
 // ------------------------------------------------------------------------------------------
 
 // // GET all users to render to homepage
-router.get('/', withAuth, async (req, res) => {
+router.get('/dashboard', withAuth, async (req, res) => {
   try {
       const userData = await User.findAll({
           include: [
@@ -401,7 +401,7 @@ router.get('/login', async (req, res) => {
 
   // if the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-      res.redirect('/test-becca-dashboard');
+      res.redirect('/dashboard');
       return;
   }
 
