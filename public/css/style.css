@@ -88,7 +88,7 @@ nav a :hover{
     display: flex;
     flex-direction: column;
     width: 48%;
-    background-color: gray;
+    background-color: rgb(255, 220, 139);
     padding: 25px;
     margin-top: 25px;
     border-radius: 10px;
