@@ -1,46 +1,40 @@
 <!DOCTYPE html>
-
 <html lang="en">
+    <head>
+         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Workout Blog</title>
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Workout Blog</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/loading-bar.css">
-  <link rel="stylesheet" href="/css/loading-bar.min.css">
-  
-</head>
-
-<nav>
-    <a href="/">Home</a>
-    <a href="/dashboard">Dashboard</a>
-    {{#if logged_in}}
-            <button id="logout">Logout</button>
+    <body>
+        <nav>
+         <a href="/">Home</a>
+            <a href="/dashboard">Dashboard</a>
+            {{#if logged_in}}
+             <button id="logout">Logout</button>
             {{else}}
             <a href="/login">Login</a>
             {{/if}}
-</nav>
+        </nav>
 
-<body>
         <header>
-
-        <h1 class="title">Home</h1>
-
+          <h1 class="title">Home</h1>
         </header>
 
         <main>
-            {{{ body }}}
+         {{{ body }}}
         </main>
 
         <footer>
-            {{#if logged_in}}
-                <script src="/js/logout.js"></script>
-                {{/if}}
-            <p>Workout Tracker Blog 2023</p>
+         {{#if logged_in}}
+         <script src="/js/logout.js"></script>
+         {{/if}}
+         <p>Workout Tracker Blog 2023</p>
         </footer>
+
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-</body>
 
+    </body>
+    
 </html>
-
