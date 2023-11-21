@@ -204,3 +204,7 @@ nav a :hover{
     /* top right bottom left NO COMMAS */
     margin: 0 10px 0 10px;
 }
+
+footer{
+ display: center;
+}
