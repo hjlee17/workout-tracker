@@ -110,7 +110,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
       console.log('tiles:', tiles)
 
-      res.render('test-becca-dashboard', {
+      res.render('dashboard', {
         tiles, 
         // "logged_in" flag passed to use in main
         logged_in: req.session.logged_in
@@ -262,7 +262,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
       console.log('tiles:', tiles)
 
-      res.render('test-becca-dashboard', {
+      res.render('dashboard', {
         tiles, 
         // "logged_in" flag passed to use in main
         logged_in: req.session.logged_in
