@@ -5,41 +5,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Landing Page</title>
-  <link rel="stylesheet" href="/css/style-becca.css">
+  <title>Workout Blog</title>
+  {{!-- <link rel="stylesheet" href="/css/style.css"> --}}
 </head>
+
+<nav>
+    <a href="/home/">Home</a>|
+    <a href="/profile/">My Profile</a>|
+    <a href="/Login/">Login</a>|
+    <a href="/signup/">Signup</a>|
+    <a href="/logout/">Log Out</a>
+</nav>
 
 <body>
 
-    <div class="header">
-        <div class="navbar">
-            <!-- conditionally render login or logout links -->
-            <a href="/">Home</a>
-            <a href="/dashboard">Dashboard</a>
-            {{#if logged_in}}
-            <button id="logout">Logout</button>
-            {{else}}
-            <a href="/login">Login</a>
-            {{/if}}
-        </div>
-        <h1 class="title">Workout Trackers</h1>
-    </div>
+    <div>
+        <header>
 
-    <div class="main">
+        <h1>Home Page</h1>
+
+        </header>
+
         <main>
-        <!-- render the layout -->
             {{{ body }}}
         </main>
+
+        <footer>
+        <p>Workout Tracker Blog 2023</p>
+        </footer>
     </div>
 
-    <div class="footer">
-    </div>
-
-    <!-- conditionally render script for logged in users only -->
-    {{#if logged_in}}
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="/js/becca-logout.js"></script>
-    {{/if}}
 </body>
 
 </html>
