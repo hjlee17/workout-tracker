@@ -1,13 +1,19 @@
 const loginFormHandler = async (event) => {
     event.preventDefault();
-    // const email = $('id or class selector').val().trim();
-    // const password = $('id or class selector').val().trim();
+    console.log('Hello')
+     const email = $('#email-login').val().trim();
+     const password = $('#password-login').val().trim();
+    console.log(email,password);
+    const loginData = {
+      email: email,
+      password: password,
+    };
 
     if (email && password) {
         // Send the e-mail and password to the server
-        const response = await fetch('/api/login', {
+        const response = await fetch('/api/users/login', {
           method: 'POST',
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify(loginData),
           headers: { 'Content-Type': 'application/json' },
         });
     
@@ -18,6 +24,7 @@ const loginFormHandler = async (event) => {
         }
       }
     };
-document //TODO: Awaiting handlbar integration
-.querySelector('.login-btn')
-.addEventListener('submit', loginFormHandler);
+
+$('#login-btn').click(function(event) {
+  loginFormHandler(event);
+});

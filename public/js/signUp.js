@@ -1,7 +1,7 @@
 // Prevents the default form submission behavior to handle the signup process asynchronously
 const signupFormhandler = async (event) => {
   event.preventDefault();
-}
+
 
 // Retrieves the input elements for username and password from the DOM
 const usernameImput = document.querySelector("#username-signup");
@@ -42,9 +42,20 @@ if (username && password) {
       // Handles errors that occur during the asynchronous operation
       console.error(`An error occurred: ${error.message}`);
   }
+}
 }; 
 
 // Adds a submit event listener to the signup form, triggering the signupFormhandler function
-document
-  .querySelector(".signup-form")
-  .addEventListener("submit", signupFormhandler);
+// document
+//   .querySelector(".signup-form")
+//   .addEventListener("submit", signupFormhandler);
+const buttonTest = async (event) => {
+    event.preventDefault();
+    console.log("button clicked")
+    // document.location.replace('/test');
+  }
+  
+  // event handler for the edit post button
+  $('#signUp-btn').click(function(event) {
+    buttonTest(event);
+  });
