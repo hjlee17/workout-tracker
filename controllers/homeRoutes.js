@@ -57,7 +57,7 @@ router.get('/dashboard', withAuth, async (req, res) => {
       console.log('users:', users)
 
       // render homepage
-      res.render('test-becca-homepage', {
+      res.render('homepage', {
         users,
         logged_in: req.session.logged_in
       });
@@ -209,7 +209,7 @@ router.get('/', withAuth, async (req, res) => {
       console.log('users:', users)
 
       // render homepage
-      res.render('test-becca-homepage', {
+      res.render('homepage', {
         users,
         logged_in: req.session.logged_in
       });
